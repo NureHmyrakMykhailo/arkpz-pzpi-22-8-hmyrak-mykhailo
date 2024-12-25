@@ -1,0 +1,17 @@
+C:\project_library_git\Library\SensorEmulator\bin\Debug\net6.0-windows\SensorEmulator.exe
+C:\project_library_git\Library\SensorEmulator\bin\Debug\net6.0-windows\SensorEmulator.deps.json
+C:\project_library_git\Library\SensorEmulator\bin\Debug\net6.0-windows\SensorEmulator.runtimeconfig.json
+C:\project_library_git\Library\SensorEmulator\bin\Debug\net6.0-windows\SensorEmulator.dll
+C:\project_library_git\Library\SensorEmulator\bin\Debug\net6.0-windows\SensorEmulator.pdb
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.FormMain.resources
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.csproj.GenerateResource.cache
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.GeneratedMSBuildEditorConfig.editorconfig
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.AssemblyInfoInputs.cache
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.AssemblyInfo.cs
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.csproj.CoreCompileInputs.cache
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.sourcelink.json
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.dll
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\refint\SensorEmulator.dll
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.pdb
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\SensorEmulator.genruntimeconfig.cache
+C:\project_library_git\Library\SensorEmulator\obj\Debug\net6.0-windows\ref\SensorEmulator.dll
