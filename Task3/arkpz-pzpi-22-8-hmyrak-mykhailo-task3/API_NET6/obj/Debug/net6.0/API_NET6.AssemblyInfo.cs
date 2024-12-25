@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_NET6")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14561664ca3c03cfd6c971c284b3f05e3d562997")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2af5d735004954bfd8f012d8d855ec9f749a7ac1")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_NET6")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_NET6")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

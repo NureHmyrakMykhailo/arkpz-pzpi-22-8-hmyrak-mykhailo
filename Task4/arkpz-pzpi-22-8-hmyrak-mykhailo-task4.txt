@@ -1,0 +1,319 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+
+
+Звіт
+До лаборотної роботи №4
+З дисципліни:
+«Аналіз та рефакторінг коду»
+на тему «РОЗРОБКА ІоТ КЛІЄНТА»
+
+
+
+
+	
+
+
+
+Виконав:                                                                                        
+Ст. гр. ПЗПІ-22-8                                                                                                         
+Гмирак Михайло Дмитрович                                                                                
+
+
+Перевірив:
+ст. викладач кафедри ПІ
+Сокорчук Ігор Петрович
+
+
+
+
+
+
+
+
+Харків 2024
+
+
+     1 МЕТА РОБОТИ 
+     Розробити програмне забезпечення для IoT або SmartDevice пристрою, створеного на базі будь-якої поширеної на сьогодні платформи, придатної для реалізації вбудованих систем
+     
+     2 ХІД РОБОТИ
+     2.1 Бізнес логіка ІоТ клієнта
+     
+     Реалізація бізнес-логіки IoT клієнта виконується з використанням мови програмування C# та REST API для взаємодії між клієнтською та серверною частинами. Система складається з трьох основних компонентів: клієнтський додаток для емуляції даних сенсорів, серверна частина для обробки запитів, а також база даних для зберігання параметрів та аналітичної інформації.
+     Клієнтська програма IoT забезпечує можливість вводу значень параметрів, які симулюють роботу фізичних сенсорів. Ввод температури, вологісті та тиску у відповідні поля інтерфейсу. Перед натисканням кнопки надсилання даних програма перевіряє коректність введених значень (Код наведений у додатку А).
+      Передача даних на сервер здійснюєтся  після натискання кнопки "Send", клієнтська програма виконує POST-запит до ендпоінта /climatmonitors. Дані, які передаються - Temperature (Температура), Wet (Вологість), Pressure (Тиск). Запит включає Bearer-токен для підтвердження автентифікації користувача. У разі успішної передачі сервер повертає код статусу 201 (Created).
+     Серверна частина виконує наступні операції:
+     * Перевірка автентифікації клієнта.
+     * Збереження отриманих даних у базі даних.
+     * Аналіз даних на відповідність допустимим межам. Граничні значення (TempMax, TempMin, WetMax, WetMin) зберігаються в конфігурації серверу.
+     Клієнти можуть отримати доступ до раніше збережених записів надісланих від IoT пристрою, виконавши GET-запит на climatmonitors.
+Запит підтримує фільтри за періодом часу (startDate, endDate). У відповіді сервер повертає:
+     * Параметри (температура, вологість, тиск);
+     * Час вимірювання;
+     * Позначки про перевищення граничних значень.
+     Для аналізу роботи сенсорів здійснюється підрахунок часу, протягом якого значення температури та вологості перебували поза межами допустимих значень. Логіка ґрунтується на обчисленні різниці часу між послідовними вимірюваннями, якщо обидва вимірювання виходять за встановлені межі (Код наведений у додатку А).
+     Час, протягом якого температура перевищувала допустимі межі розраховується за формулою: 
+     ?t_above= ?_(i=1)^(N-1)?{?(?t_i?_(+1)-t_i@0)?   
+     
+     Час, протягом якого температура була нижче допустимих меж розраховується  за формулою:
+     ?t_below= ?_(i=1)^(N-1)?{?(?t_i?_(+1)-t_i@0)?   
+     
+     Аналогічний розрахунок виконується і для підрахунку вологості. для вологості.
+     Для кожної пари послідовних вимірювань (i -те та i+1-ше):
+     Якщо обидва значення перевищують або не досягають межі, то додається часова різниця ?t=?t_i?_(+1 )-t_i    
+     Якщо одне з вимірювань перебуває в межах допустимих значень, різниця часу не додається.
+     Ця інформація дозволяє виявляти аномальні події в середовищі.
+     
+     
+     Рисунок 2.2.1 – UML діаграма прецедентів ІоТ клієнта
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+
+     Рисунок 2.2.2 – UML діаграма діяльності ІоТ клієнта
+     
+     Висновки: під час роботи було розроблено програмне забезпечення для ІоТ для програмної системи.
+     
+     Посилання на відеоролік: https://youtu.be/Z-H5gdQT5fs
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     Додаток А
+     Реалізація та Налаштування IoT пристрою
+     
+     1  public partial class FormMain : Form
+     2  {
+     3      // Base URL of the API
+     4      public string baseUrl;
+     5  
+     6      // Bearer token for authentication
+     7      public string bearerToken;
+     8  
+     9      public FormMain()
+     10     {
+     11         InitializeComponent();
+     12     }
+     13 
+     14     // Event handler for the login button
+     15     private async void buttonLogin_Click(object sender, EventArgs e)
+     16     {
+     17         baseUrl = textBoxUrl.Text; 
+     18         string login = textBoxLogin.Text; 
+     19         string password = textBoxPassword.Text; 
+     20 
+     21         var token = await GetBearerTokenAsync(baseUrl, login, password);
+     22         if (token != null)
+     23         {
+     24             bearerToken = token; 
+     25             MessageBox.Show("Login successful!");
+     26         }
+     27         else
+     28         {
+     29             MessageBox.Show("Login failed!"); 
+     30         }
+     31     }
+     32 
+     33     private async Task<string?> GetBearerTokenAsync(
+     34         string baseUrl, string login, string password)
+     35     {
+     36         using var client = new HttpClient();
+     37         var requestUrl = $"{baseUrl}/auth/login"; 
+     38 
+     39         var requestBody = new
+     40         {
+     41             username = login,
+     42             password = password
+     43         };
+     44 
+     45         var json = JsonSerializer.Serialize(requestBody);
+     46         var content = new StringContent(
+     47             json, Encoding.UTF8, "application/json");
+     48 
+     49         var response = await client.PostAsync(requestUrl, content);
+     50         if (response.IsSuccessStatusCode) 
+     51         {
+     52             var responseContent = await response
+     53                 .Content.ReadAsStringAsync();
+     54             var responseObject = JsonSerializer.Deserialize<JsonElement>(
+     55                 responseContent);
+     56 
+     57             if (responseObject.TryGetProperty(
+     58                 "token", out var tokenElement))
+     59             {
+     60                 return tokenElement.GetString();
+     61             }
+     62         }
+     63 
+     64         return null; 
+     65     }
+     66 
+     67     private async void buttonSend_Click(object sender, EventArgs e)
+     68     {
+     69         if (string.IsNullOrEmpty(bearerToken)) 
+     70         {
+     71             MessageBox.Show("Please login first.");
+     72             return;
+     73         }
+     74 
+     75         var climatMonitorRequest = new ClimatMonitorRequest
+     76         {
+     77             Temperature = double.TryParse(
+     78                 textBoxTemperature.Text, out var temp) ? temp : null,
+     79             Wet = double.TryParse(
+     80                 textBoxWet.Text, out var wet) ? wet : null,
+     81             Pressure = double.TryParse(
+     82                 textBoxPressure.Text, out var pressure) ? pressure : null
+     83         };
+     84 
+     85         var success = await SendClimatMonitorDataAsync(
+     86             baseUrl, climatMonitorRequest, bearerToken);
+     87         if (success)
+     88         {
+     89             MessageBox.Show("Data sent successfully!");
+     90         }
+     91         else
+     92         {
+     93             MessageBox.Show("Failed to send data.");
+     94         }
+     95     }
+     96 
+     97     private async Task<bool> SendClimatMonitorDataAsync(
+     98         string baseUrl, ClimatMonitorRequest request, string token)
+     99     {
+     100        using var client = new HttpClient();
+     101        var requestUrl = $"{baseUrl}/climatmonitors"; 
+     102 
+     103        client.DefaultRequestHeaders.Authorization = 
+     104            new AuthenticationHeaderValue("Bearer", token);
+     105 
+     106        var json = JsonSerializer.Serialize(request);
+     107        var content = new StringContent(
+     108            json, Encoding.UTF8, "application/json");
+     109 
+     110        var response = await client.PostAsync(requestUrl, content);
+     111        return response.IsSuccessStatusCode; 
+     112    }
+     113 
+     114    private void FormMain_Load(object sender, EventArgs e)
+     115    {
+     116    }
+     117 }
+     118 
+     119 public class ClimatMonitorRequest
+     120 {
+     121     public double? Temperature { get; set; } 
+     122     public double? Wet { get; set; }        
+     123     public double? Pressure { get; set; }   
+     124 }
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     Додаток Б
+     Підрахунок часу, протягом якого значення температури та вологості перебували поза межами допустимих значень.
+     
+     1   // Add flags to results indicating out-of-bound parameter values
+     2   var resultWithFlags = result.Select(cm => new
+     3   {
+     4       cm.Id,
+     5       cm.Time,
+     6       cm.Temperature,
+     7       cm.Wet,
+     8       cm.Pressure,
+     9       IsTemperatureOutOfBounds = (tempMax.HasValue && 
+     10                                  cm.Temperature > tempMax.Value) ||
+     11                                  (tempMin.HasValue && 
+     12                                  cm.Temperature < tempMin.Value),
+     13      IsWetOutOfBounds = (wetMax.HasValue && 
+     14                         cm.Wet > wetMax.Value) ||
+     15                         (wetMin.HasValue && 
+     16                         cm.Wet < wetMin.Value)
+     17   }).ToList();
+     18 
+     19  // Calculate the duration for which parameters were out of bounds
+     20   for (int i = 1; i < result.Count; i++)
+     21  {
+     22      var prev = result[i - 1]; // Previous record
+     23      var current = result[i]; // Current record
+     24 
+     25      // Calculate duration where temperature exceeds the maximum 
+     26 threshold
+     27      if (tempMax.HasValue && prev.Temperature > tempMax.Value && 
+     28          current.Temperature > tempMax.Value)
+     29      {
+     30          timeTemperatureAbove += (current.Time - 
+     31                                   prev.Time).TotalSeconds;
+     32      }
+     33 
+     34      // Calculate duration where temperature is below the minimum 
+     35     threshold
+     36      if (tempMin.HasValue && prev.Temperature < tempMin.Value && 
+     37          current.Temperature < tempMin.Value)
+     38      {
+     39          timeTemperatureBelow += (current.Time - 
+     40                                   prev.Time).TotalSeconds;
+     41      }
+     42 
+     43      // Calculate duration where wetness exceeds the maximum threshold
+     44      if (wetMax.HasValue && prev.Wet > wetMax.Value && 
+     45          current.Wet > wetMax.Value)
+     46      {
+     47          timeWetAbove += (current.Time - 
+     48                          prev.Time).TotalSeconds;
+     49      }
+     50 
+     51      // Calculate duration where wetness is below the minimum threshold
+     52      if (wetMin.HasValue && prev.Wet < wetMin.Value && 
+     53          current.Wet < wetMin.Value)
+     54      {
+     55          timeWetBelow += (current.Time - 
+     56                          prev.Time).TotalSeconds;
+     57      }
+     58  }
+     59 
+     60  // Return results with calculations
+     61  return Results.Ok(new
+     62  {
+     63      result = resultWithFlags,
+     64      timeTemperatureAbove,
+     65      timeTemperatureBelow,
+     66      timeWetAbove,
+     67      timeWetBelow
+     68  });
+     69 });
+2

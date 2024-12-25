@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vH7zb0+8Sw4=",
+  "dgSpecHash": "LufNMeN03o0=",
   "success": true,
-  "projectFilePath": "C:\\project_library_git\\Library\\API_NET6\\API_NET6.csproj",
+  "projectFilePath": "C:\\Projects\\arkpz-pzpi-22-8-hmyrak-mykhailo\\Task4\\arkpz-pzpi-22-8-hmyrak-mykhailo-task4\\API_NET6\\API_NET6.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Mihail\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Mihail\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
