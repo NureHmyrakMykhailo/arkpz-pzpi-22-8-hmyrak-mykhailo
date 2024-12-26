@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SensorEmulator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2af5d735004954bfd8f012d8d855ec9f749a7ac1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fbe957b19d5af51e23b5fa2e4ffc523542bff783")]
 [assembly: System.Reflection.AssemblyProductAttribute("SensorEmulator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SensorEmulator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
